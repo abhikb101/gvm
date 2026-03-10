@@ -1,0 +1,62 @@
+version: 2
+project_name: gvm
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: gvm
+    main: ./main.go
+    binary: gvm
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.ShortCommit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - id: gvm
+    format: tar.gz
+    name_template: "gvm_{{ .Os }}_{{ .Arch }}"
+
+brews:
+  - name: gvm
+    repository:
+      owner: abhikb101
+      name: homebrew-gvm
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/abhikb101/gvm"
+    description: "nvm for Git identities. Switch between multiple GitHub accounts with ease."
+    license: "MIT"
+    install: |
+      bin.install "gvm"
+    test: |
+      system "#{bin}/gvm", "--version"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+release:
+  github:
+    owner: abhikb101
+    name: gvm
+  draft: false
+  prerelease: auto
