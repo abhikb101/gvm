@@ -66,7 +66,9 @@ func runUse(cmd *cobra.Command, args []string) error {
 
 	// Set up credential helper if profile has HTTP auth
 	if p.HasHTTP() {
-		gitpkg.ConfigureCredentialHelper("local", p.Name)
+		if err := gitpkg.ConfigureCredentialHelper("local", p.Name); err != nil {
+			ui.Warn("Could not configure credential helper: %v", err)
+		}
 	}
 
 	// Activate this profile

@@ -91,7 +91,7 @@ func runRemove(cmd *cobra.Command, args []string) error {
 	// If this was the active profile, clear active state
 	active, _ := config.GetActive()
 	if active == name {
-		config.ClearActive()
+		_ = config.ClearActive()
 	}
 
 	ui.Success("Profile '%s' removed", name)

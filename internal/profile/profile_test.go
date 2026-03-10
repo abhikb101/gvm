@@ -341,7 +341,7 @@ func TestTouchLastUsed(t *testing.T) {
 		CreatedAt:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		LastUsed:   time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
-	p.Save()
+	_ = p.Save()
 
 	before := p.LastUsed
 	if err := p.TouchLastUsed(); err != nil {

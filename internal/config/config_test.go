@@ -209,9 +209,9 @@ func TestExists(t *testing.T) {
 		t.Error("Exists() = true before init")
 	}
 
-	EnsureDirectories()
+	_ = EnsureDirectories()
 	cfg := DefaultConfig("zsh")
-	cfg.Save()
+	_ = cfg.Save()
 
 	if !Exists() {
 		t.Error("Exists() = false after init")

@@ -41,8 +41,8 @@ func runUnbind(cmd *cobra.Command, args []string) error {
 	}
 
 	// Clean up local git config set by GVM
-	gitpkg.UnsetLocalConfig("core.sshCommand")
-	gitpkg.UnsetLocalConfig("credential.https://github.com.helper")
+	_ = gitpkg.UnsetLocalConfig("core.sshCommand")
+	_ = gitpkg.UnsetLocalConfig("credential.https://github.com.helper")
 
 	ui.Success("Unbound profile '%s' from %s", current, repoRoot)
 	return nil

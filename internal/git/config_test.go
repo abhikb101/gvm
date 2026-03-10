@@ -9,8 +9,8 @@ import (
 func TestConfigureIdentityLocal(t *testing.T) {
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
-	os.Chdir(repoDir)
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
 
 	err := ConfigureIdentity("local", "Test User", "test@example.com", "/tmp/fake-key")
 	if err != nil {
@@ -42,8 +42,8 @@ func TestConfigureIdentityGlobal(t *testing.T) {
 	// Need a repo context for git to work
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
-	os.Chdir(repoDir)
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
 
 	// global config without sshKeyPath
 	err := ConfigureIdentity("global", "Global User", "global@example.com", "")
@@ -60,8 +60,8 @@ func TestConfigureIdentityGlobal(t *testing.T) {
 func TestSetLocalConfig(t *testing.T) {
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
-	os.Chdir(repoDir)
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
 
 	err := SetLocalConfig("user.name", "LocalTest")
 	if err != nil {
@@ -80,11 +80,11 @@ func TestSetLocalConfig(t *testing.T) {
 func TestUnsetLocalConfig(t *testing.T) {
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
-	os.Chdir(repoDir)
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
 
-	SetLocalConfig("test.key", "value")
-	UnsetLocalConfig("test.key")
+	_ = SetLocalConfig("test.key", "value")
+	_ = UnsetLocalConfig("test.key")
 
 	_, err := GetLocalConfig("test.key")
 	if err == nil {
@@ -95,8 +95,8 @@ func TestUnsetLocalConfig(t *testing.T) {
 func TestConfigureCredentialHelper(t *testing.T) {
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
-	os.Chdir(repoDir)
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
 
 	err := ConfigureCredentialHelper("local", "test-profile")
 	if err != nil {

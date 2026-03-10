@@ -121,7 +121,7 @@ func RemoveKeyFromAgent(keyPath string) error {
 		return nil
 	}
 	cmd := exec.Command("ssh-add", "-d", keyPath)
-	cmd.Run() // best effort — ignore errors
+	_ = cmd.Run()
 	return nil
 }
 
@@ -132,7 +132,7 @@ func DeleteSSHKey(profileName string) error {
 		return err
 	}
 
-	RemoveKeyFromAgent(keyPath)
+	_ = RemoveKeyFromAgent(keyPath)
 
 	for _, p := range []string{keyPath, keyPath + ".pub"} {
 		if err := os.Remove(p); err != nil && !os.IsNotExist(err) {

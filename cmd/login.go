@@ -54,7 +54,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 				return nil
 			}
 			// User confirmed — delete old key so setupSSH doesn't ask again
-			auth.DeleteSSHKey(name)
+			_ = auth.DeleteSSHKey(name)
 		}
 
 		if err := setupSSHForProfile(reader, p); err != nil {

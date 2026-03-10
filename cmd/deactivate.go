@@ -47,6 +47,6 @@ func deactivateProfile(name string) {
 		return
 	}
 	if p.SSHKeyPath != "" {
-		auth.RemoveKeyFromAgent(p.SSHKeyPath)
+		_ = auth.RemoveKeyFromAgent(p.SSHKeyPath)
 	}
 }

@@ -20,10 +20,10 @@ func setupTestEnv(t *testing.T) string {
 	t.Helper()
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	config.EnsureDirectories()
+	_ = config.EnsureDirectories()
 
 	cfg := config.DefaultConfig("zsh")
-	cfg.Save()
+	_ = cfg.Save()
 
 	return home
 }
@@ -107,7 +107,7 @@ func TestDeactivateProfile(t *testing.T) {
 	setupTestEnv(t)
 	createTestProfile(t, "test-deactivate", "test@example.com")
 
-	activateProfile("test-deactivate", true)
+	_ = activateProfile("test-deactivate", true)
 
 	deactivateProfile("test-deactivate")
 
@@ -119,12 +119,12 @@ func TestUseBindsProfile(t *testing.T) {
 	createTestProfile(t, "use-test", "use@test.com")
 
 	repoDir := filepath.Join(home, "test-repo")
-	os.MkdirAll(repoDir, 0755)
+	_ = os.MkdirAll(repoDir, 0755)
 	initTestRepo(t, repoDir)
 
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
-	os.Chdir(repoDir)
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
 
 	// Simulate `gvm use`
 	repoRoot, _ := gitpkg.FindRepoRoot()
@@ -274,8 +274,8 @@ func TestIsGVMRCInGlobalGitignore(t *testing.T) {
 
 	// Create it
 	ignoreDir := home + "/.config/git"
-	os.MkdirAll(ignoreDir, 0755)
-	os.WriteFile(ignoreDir+"/ignore", []byte(".DS_Store\n.gvmrc\n"), 0644)
+	_ = os.MkdirAll(ignoreDir, 0755)
+	_ = os.WriteFile(ignoreDir+"/ignore", []byte(".DS_Store\n.gvmrc\n"), 0644)
 
 	if !isGVMRCInGlobalGitignore() {
 		t.Error("isGVMRCInGlobalGitignore() = false after adding .gvmrc")
@@ -287,9 +287,9 @@ func TestRemoveFromGlobalGitignore(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	ignoreDir := home + "/.config/git"
-	os.MkdirAll(ignoreDir, 0755)
+	_ = os.MkdirAll(ignoreDir, 0755)
 	ignorePath := ignoreDir + "/ignore"
-	os.WriteFile(ignorePath, []byte(".DS_Store\n.gvmrc\n*.swp\n"), 0644)
+	_ = os.WriteFile(ignorePath, []byte(".DS_Store\n.gvmrc\n*.swp\n"), 0644)
 
 	removeFromGlobalGitignore()
 
@@ -366,7 +366,7 @@ func TestRunWhoamiNoActive(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	if err != nil {
 		t.Fatalf("runWhoami() error = %v", err)
@@ -389,7 +389,7 @@ func TestRunListEmpty(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	if err != nil {
 		t.Fatalf("runList() error = %v", err)
@@ -412,7 +412,7 @@ func TestRunConfig(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	if err != nil {
 		t.Fatalf("runConfig() error = %v", err)
@@ -442,7 +442,10 @@ func TestRunConfigSet(t *testing.T) {
 		t.Fatalf("runConfigSet() error = %v", err)
 	}
 
-	cfg, _ := config.Load()
+	cfg, loadErr := config.Load()
+	if loadErr != nil {
+		t.Fatalf("config.Load() error = %v", loadErr)
+	}
 	if cfg.DefaultAuth != "http" {
 		t.Errorf("DefaultAuth = %q after set, want \"http\"", cfg.DefaultAuth)
 	}
@@ -480,7 +483,7 @@ func TestRunExportToStdout(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	if err != nil {
 		t.Fatalf("runExport() error = %v", err)
@@ -526,7 +529,7 @@ func TestRunExportToFile(t *testing.T) {
 func TestRunWhoamiWithActive(t *testing.T) {
 	setupTestEnv(t)
 	createTestProfile(t, "whoami-test", "whoami@test.com")
-	config.SetActive("whoami-test")
+	_ = config.SetActive("whoami-test")
 
 	old := os.Stdout
 	r, w, _ := os.Pipe()
@@ -538,7 +541,7 @@ func TestRunWhoamiWithActive(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	if err != nil {
 		t.Fatalf("runWhoami() error = %v", err)
@@ -556,7 +559,7 @@ func TestRunListWithProfiles(t *testing.T) {
 	setupTestEnv(t)
 	createTestProfile(t, "list-a", "a@test.com")
 	createTestProfile(t, "list-b", "b@test.com")
-	config.SetActive("list-a")
+	_ = config.SetActive("list-a")
 
 	old := os.Stdout
 	r, w, _ := os.Pipe()
@@ -570,7 +573,7 @@ func TestRunListWithProfiles(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	// Just verify profiles exist
 	p, _ := profile.List()
 	if len(p) != 2 {
@@ -583,7 +586,7 @@ func TestRunCredentialHelper(t *testing.T) {
 	p := createTestProfile(t, "cred-test", "cred@test.com")
 	p.GitHubUsername = "creduser"
 	p.GHTokenEncrypted = ""
-	p.Save()
+	_ = p.Save()
 
 	// Should error when no token
 	err := runCredentialHelper(nil, []string{"cred-test"})
@@ -626,10 +629,10 @@ func TestRunUnbindNoRepo(t *testing.T) {
 
 	// cd to a non-repo directory
 	old, _ := os.Getwd()
-	defer os.Chdir(old)
+	defer func() { _ = os.Chdir(old) }()
 
 	dir := t.TempDir()
-	os.Chdir(dir)
+	_ = os.Chdir(dir)
 
 	err := runUnbind(nil, nil)
 	if err == nil {
@@ -740,8 +743,8 @@ func TestDecryptProfileToken(t *testing.T) {
 		GitEmail:   "test@test.com",
 		AuthMethod: profile.AuthHTTP,
 	}
-	storeToken(p, "ghp_secret_token")
-	p.Save()
+	_ = storeToken(p, "ghp_secret_token")
+	_ = p.Save()
 
 	token, err := decryptProfileToken(p)
 	if err != nil {
@@ -767,12 +770,12 @@ func TestRunDoctorInitialized(t *testing.T) {
 
 	// Install a fake shell hook
 	home := os.Getenv("HOME")
-	os.WriteFile(home+"/.zshrc",
+	_ = os.WriteFile(home+"/.zshrc",
 		[]byte("stuff\n# >>> gvm initialize >>>\nhook\n# <<< gvm initialize <<<\n"), 0644)
 
 	// Add .gvmrc to gitignore
-	os.MkdirAll(home+"/.config/git", 0755)
-	os.WriteFile(home+"/.config/git/ignore", []byte(".gvmrc\n"), 0644)
+	_ = os.MkdirAll(home+"/.config/git", 0755)
+	_ = os.WriteFile(home+"/.config/git/ignore", []byte(".gvmrc\n"), 0644)
 
 	old := os.Stdout
 	_, w, _ := os.Pipe()
@@ -798,7 +801,7 @@ func TestRunRemoveFromGlobalGitignoreNoFile(t *testing.T) {
 func TestRunDeactivate(t *testing.T) {
 	setupTestEnv(t)
 	createTestProfile(t, "deact-test", "deact@test.com")
-	activateProfile("deact-test", true)
+	_ = activateProfile("deact-test", true)
 
 	err := runDeactivate(nil, nil)
 	if err != nil {
@@ -833,7 +836,7 @@ func TestRunInitAlreadyInitialized(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	if err != nil {
 		t.Fatalf("runInit() error = %v", err)

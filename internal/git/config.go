@@ -29,7 +29,7 @@ func GetGlobalConfig(key string) (string, error) {
 // UnsetLocalConfig removes a git config value at the repository level.
 func UnsetLocalConfig(key string) error {
 	cmd := exec.Command("git", "config", "--local", "--unset", key)
-	cmd.Run() // best effort
+	_ = cmd.Run()
 	return nil
 }
 

@@ -52,11 +52,11 @@ func TestSSHKeyExistsWithKey(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	sshDir := filepath.Join(home, ".ssh")
-	os.MkdirAll(sshDir, 0700)
+	_ = os.MkdirAll(sshDir, 0700)
 
 	// Create a fake key
 	keyPath := filepath.Join(sshDir, "gvm_test-exists")
-	os.WriteFile(keyPath, []byte("fake-key"), 0600)
+	_ = os.WriteFile(keyPath, []byte("fake-key"), 0600)
 
 	exists, err := SSHKeyExists("test-exists")
 	if err != nil {
@@ -72,7 +72,7 @@ func TestGenerateSSHKey(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	sshDir := filepath.Join(home, ".ssh")
-	os.MkdirAll(sshDir, 0700)
+	_ = os.MkdirAll(sshDir, 0700)
 
 	keyPath, err := GenerateSSHKey("test-gen")
 	if err != nil {
@@ -112,12 +112,12 @@ func TestDeleteSSHKey(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	sshDir := filepath.Join(home, ".ssh")
-	os.MkdirAll(sshDir, 0700)
+	_ = os.MkdirAll(sshDir, 0700)
 
 	// Create fake keys
 	keyPath := filepath.Join(sshDir, "gvm_delete-test")
-	os.WriteFile(keyPath, []byte("private"), 0600)
-	os.WriteFile(keyPath+".pub", []byte("public"), 0644)
+	_ = os.WriteFile(keyPath, []byte("private"), 0600)
+	_ = os.WriteFile(keyPath+".pub", []byte("public"), 0644)
 
 	err := DeleteSSHKey("delete-test")
 	if err != nil {

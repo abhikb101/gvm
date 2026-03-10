@@ -15,7 +15,7 @@ func timeNow() time.Time {
 
 // openGitHubSSHSettings opens the GitHub SSH key settings page.
 func openGitHubSSHSettings() {
-	platform.OpenBrowser("https://github.com/settings/ssh/new")
+	_ = platform.OpenBrowser("https://github.com/settings/ssh/new")
 }
 
 // storeToken encrypts and stores an OAuth token in the profile.
@@ -52,7 +52,7 @@ func loadToken(p *profile.Profile) (string, error) {
 // deleteToken removes a stored token from both keychain and profile.
 func deleteToken(p *profile.Profile) {
 	if p.GHTokenEncrypted == "keychain" {
-		platform.KeychainDelete(p.Name)
+		_ = platform.KeychainDelete(p.Name)
 	}
 	p.GHTokenEncrypted = ""
 }

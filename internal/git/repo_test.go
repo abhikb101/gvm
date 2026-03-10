@@ -27,9 +27,9 @@ func TestFindRepoRoot(t *testing.T) {
 
 	// From repo root
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
-	os.Chdir(repoDir)
+	_ = os.Chdir(repoDir)
 	root, err := FindRepoRoot()
 	if err != nil {
 		t.Fatalf("FindRepoRoot() error = %v", err)
@@ -44,8 +44,8 @@ func TestFindRepoRoot(t *testing.T) {
 
 	// From subdirectory
 	subDir := filepath.Join(repoDir, "src", "pkg")
-	os.MkdirAll(subDir, 0755)
-	os.Chdir(subDir)
+	_ = os.MkdirAll(subDir, 0755)
+	_ = os.Chdir(subDir)
 
 	root, err = FindRepoRoot()
 	if err != nil {
@@ -60,9 +60,9 @@ func TestFindRepoRoot(t *testing.T) {
 func TestFindRepoRootNotARepo(t *testing.T) {
 	dir := t.TempDir()
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
-	os.Chdir(dir)
+	_ = os.Chdir(dir)
 	_, err := FindRepoRoot()
 	if err == nil {
 		t.Error("FindRepoRoot() should return error outside a repo")
@@ -72,15 +72,15 @@ func TestFindRepoRootNotARepo(t *testing.T) {
 func TestIsInsideRepo(t *testing.T) {
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
-	os.Chdir(repoDir)
+	_ = os.Chdir(repoDir)
 	if !IsInsideRepo() {
 		t.Error("IsInsideRepo() = false inside a repo")
 	}
 
 	notRepo := t.TempDir()
-	os.Chdir(notRepo)
+	_ = os.Chdir(notRepo)
 	if IsInsideRepo() {
 		t.Error("IsInsideRepo() = true outside a repo")
 	}
@@ -132,7 +132,7 @@ func TestReadGVMRCNotExists(t *testing.T) {
 func TestRemoveGVMRC(t *testing.T) {
 	dir := t.TempDir()
 
-	WriteGVMRC(dir, "test")
+	_ = WriteGVMRC(dir, "test")
 
 	if err := RemoveGVMRC(dir); err != nil {
 		t.Fatalf("RemoveGVMRC() error = %v", err)

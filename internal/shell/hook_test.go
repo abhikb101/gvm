@@ -47,7 +47,7 @@ func TestIsHookInstalled(t *testing.T) {
 		t.Error("IsHookInstalled() = true before install")
 	}
 
-	InstallHook(Zsh)
+	_, _ = InstallHook(Zsh)
 
 	if !IsHookInstalled(Zsh) {
 		t.Error("IsHookInstalled() = false after install")
@@ -60,10 +60,10 @@ func TestUninstallHook(t *testing.T) {
 
 	// Write some existing content
 	rcPath := filepath.Join(home, ".zshrc")
-	os.WriteFile(rcPath, []byte("# existing config\nexport PATH=/usr/local/bin:$PATH\n"), 0644)
+	_ = os.WriteFile(rcPath, []byte("# existing config\nexport PATH=/usr/local/bin:$PATH\n"), 0644)
 
 	// Install
-	InstallHook(Zsh)
+	_, _ = InstallHook(Zsh)
 
 	// Verify installed
 	if !IsHookInstalled(Zsh) {

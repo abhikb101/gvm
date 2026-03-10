@@ -64,9 +64,11 @@ func runClone(cmd *cobra.Command, args []string) error {
 			ui.Warn("Could not set local git config: %v", err)
 		}
 		if p.HasHTTP() {
-			gitpkg.ConfigureCredentialHelper("local", p.Name)
+			if err := gitpkg.ConfigureCredentialHelper("local", p.Name); err != nil {
+				ui.Warn("Could not configure credential helper: %v", err)
+			}
 		}
-		os.Chdir(origDir)
+		_ = os.Chdir(origDir)
 	}
 
 	ui.Success("Bound '%s' to %s", name, clonedPath)

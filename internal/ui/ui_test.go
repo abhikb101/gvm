@@ -92,7 +92,7 @@ func TestTableRender(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	output := buf.String()
 
 	if !strings.Contains(output, "personal") {
@@ -136,7 +136,7 @@ func TestOutputFunctions(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	output := buf.String()
 
 	if !strings.Contains(output, "test msg") {
@@ -164,7 +164,7 @@ func TestErrorf(t *testing.T) {
 	os.Stderr = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	output := buf.String()
 
 	if !strings.Contains(output, "test error 42") {
@@ -184,7 +184,7 @@ func TestNewSpinnerNonTTY(t *testing.T) {
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	if buf.Len() == 0 {
 		t.Error("spinner produced no output in non-TTY mode")
 	}

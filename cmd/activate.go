@@ -73,7 +73,9 @@ func activateProfile(name string, quiet bool) error {
 					ui.Warn("Could not set local git config: %v", err)
 				}
 				if p.HasHTTP() {
-					gitpkg.ConfigureCredentialHelper("local", p.Name)
+					if err := gitpkg.ConfigureCredentialHelper("local", p.Name); err != nil && !quiet {
+						ui.Warn("Could not configure credential helper: %v", err)
+					}
 				}
 			}
 		}
@@ -87,7 +89,7 @@ func activateProfile(name string, quiet bool) error {
 	}
 
 	// Update last_used
-	p.TouchLastUsed()
+	_ = p.TouchLastUsed()
 
 	if !quiet {
 		ui.Success("Active identity: %s <%s>", p.GitName, p.GitEmail)

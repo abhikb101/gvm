@@ -188,7 +188,7 @@ func setupSSHForProfile(reader *bufio.Reader, p *profile.Profile) error {
 				}
 
 				fmt.Print("\nPress Enter when done...")
-				reader.ReadString('\n')
+				_, _ = reader.ReadString('\n')
 
 				for {
 					sp := ui.NewSpinner("Verifying SSH connection")
@@ -233,7 +233,7 @@ func setupSSHForProfile(reader *bufio.Reader, p *profile.Profile) error {
 	}
 
 	fmt.Print("\nPress Enter when done...")
-	reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
 
 	// Verify connection with retry loop
 	for {

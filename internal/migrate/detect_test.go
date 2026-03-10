@@ -63,7 +63,7 @@ func TestScanSSHConfig(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	sshDir := filepath.Join(home, ".ssh")
-	os.MkdirAll(sshDir, 0700)
+	_ = os.MkdirAll(sshDir, 0700)
 
 	// Write a test SSH config with GitHub host entries
 	config := `Host github-personal
@@ -79,7 +79,7 @@ Host not-github
     HostName gitlab.com
     IdentityFile ~/.ssh/id_gitlab
 `
-	os.WriteFile(filepath.Join(sshDir, "config"), []byte(config), 0644)
+	_ = os.WriteFile(filepath.Join(sshDir, "config"), []byte(config), 0644)
 
 	results := scanSSHConfig()
 
@@ -108,22 +108,22 @@ func TestScanSSHKeys(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	sshDir := filepath.Join(home, ".ssh")
-	os.MkdirAll(sshDir, 0700)
+	_ = os.MkdirAll(sshDir, 0700)
 
 	// Create a fake SSH private key
 	fakeKey := `-----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAA
 -----END OPENSSH PRIVATE KEY-----
 `
-	os.WriteFile(filepath.Join(sshDir, "id_ed25519"), []byte(fakeKey), 0600)
-	os.WriteFile(filepath.Join(sshDir, "id_ed25519.pub"),
+	_ = os.WriteFile(filepath.Join(sshDir, "id_ed25519"), []byte(fakeKey), 0600)
+	_ = os.WriteFile(filepath.Join(sshDir, "id_ed25519.pub"),
 		[]byte("ssh-ed25519 AAAAC3... john@company.com"), 0644)
 
 	// Create a GVM key (should be skipped)
-	os.WriteFile(filepath.Join(sshDir, "gvm_test"), []byte(fakeKey), 0600)
+	_ = os.WriteFile(filepath.Join(sshDir, "gvm_test"), []byte(fakeKey), 0600)
 
 	// Create a non-key file (should be skipped)
-	os.WriteFile(filepath.Join(sshDir, "known_hosts"), []byte("stuff"), 0644)
+	_ = os.WriteFile(filepath.Join(sshDir, "known_hosts"), []byte("stuff"), 0644)
 
 	results := scanSSHKeys()
 
@@ -149,7 +149,7 @@ func TestScanIncludeIf(t *testing.T) {
 	email = john@company.com
 `
 	workConfigPath := filepath.Join(home, ".gitconfig-work")
-	os.WriteFile(workConfigPath, []byte(workConfig), 0644)
+	_ = os.WriteFile(workConfigPath, []byte(workConfig), 0644)
 
 	// Create the main gitconfig with includeIf
 	mainConfig := `[user]
@@ -159,7 +159,7 @@ func TestScanIncludeIf(t *testing.T) {
 [includeIf "gitdir:~/work/"]
 	path = ` + workConfigPath + `
 `
-	os.WriteFile(filepath.Join(home, ".gitconfig"), []byte(mainConfig), 0644)
+	_ = os.WriteFile(filepath.Join(home, ".gitconfig"), []byte(mainConfig), 0644)
 
 	results := scanIncludeIf()
 
@@ -219,7 +219,7 @@ func TestReadPubKeyComment(t *testing.T) {
 	path := filepath.Join(dir, "test.pub")
 
 	// 3-part public key: type key comment
-	os.WriteFile(path, []byte("ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA john@work.com\n"), 0644)
+	_ = os.WriteFile(path, []byte("ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA john@work.com\n"), 0644)
 	comment := readPubKeyComment(path)
 	if comment != "john@work.com" {
 		t.Errorf("readPubKeyComment() = %q, want \"john@work.com\"", comment)
@@ -232,7 +232,7 @@ func TestReadPubKeyComment(t *testing.T) {
 	}
 
 	// Key with no comment (2 parts)
-	os.WriteFile(path, []byte("ssh-ed25519 AAAAC3NzaC1l"), 0644)
+	_ = os.WriteFile(path, []byte("ssh-ed25519 AAAAC3NzaC1l"), 0644)
 	comment = readPubKeyComment(path)
 	if comment != "" {
 		t.Errorf("readPubKeyComment(no-comment) = %q, want empty", comment)
