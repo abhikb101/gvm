@@ -354,7 +354,10 @@ func TestRunListNotInitialized(t *testing.T) {
 }
 
 func TestRunWhoamiNoActive(t *testing.T) {
-	setupTestEnv(t)
+	home := setupTestEnv(t)
+	oldDir, _ := os.Getwd()
+	_ = os.Chdir(home)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	old := os.Stdout
 	r, w, _ := os.Pipe()
@@ -527,7 +530,10 @@ func TestRunExportToFile(t *testing.T) {
 }
 
 func TestRunWhoamiWithActive(t *testing.T) {
-	setupTestEnv(t)
+	home := setupTestEnv(t)
+	oldDir, _ := os.Getwd()
+	_ = os.Chdir(home)
+	defer func() { _ = os.Chdir(oldDir) }()
 	createTestProfile(t, "whoami-test", "whoami@test.com")
 	_ = config.SetActive("whoami-test")
 
