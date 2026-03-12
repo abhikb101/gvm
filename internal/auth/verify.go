@@ -20,6 +20,7 @@ func VerifySSHConnection(keyPath, expectedUsername string) error {
 		"-o", "IdentitiesOnly=yes",
 		"-o", "StrictHostKeyChecking=accept-new",
 		"-o", "BatchMode=yes",
+		"-o", "ConnectTimeout=10",
 		"git@github.com",
 	)
 
