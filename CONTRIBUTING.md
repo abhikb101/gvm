@@ -5,7 +5,7 @@ Thanks for your interest in contributing!
 ## Development Setup
 
 ```bash
-git clone https://github.com/gvm-tools/gvm.git
+git clone https://github.com/abhikb101/gvm.git
 cd gvm
 go mod download
 go build -o gvm .

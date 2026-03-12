@@ -4,8 +4,8 @@
 
 **nvm for Git identities.** Switch between multiple GitHub accounts with one command.
 
-[![CI](https://github.com/gvm-tools/gvm/actions/workflows/ci.yml/badge.svg)](https://github.com/gvm-tools/gvm/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/gvm-tools/gvm)](https://github.com/gvm-tools/gvm/releases)
+[![CI](https://github.com/abhikb101/gvm/actions/workflows/ci.yml/badge.svg)](https://github.com/abhikb101/gvm/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/abhikb101/gvm)](https://github.com/abhikb101/gvm/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 [Installation](#installation) · [Quick Start](#quick-start) · [Commands](#commands) · [How It Works](#how-it-works)
@@ -39,19 +39,19 @@ cd ~/company-repo && gvm use work
 ### Homebrew (macOS/Linux)
 
 ```bash
-brew install gvm-tools/gvm/gvm
+brew install abhikb101/gvm/gvm
 ```
 
 ### Script
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/gvm-tools/gvm/main/scripts/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/abhikb101/gvm/main/scripts/install.sh | sh
 ```
 
 ### From source
 
 ```bash
-go install github.com/gvm-tools/gvm@latest
+go install github.com/abhikb101/gvm@latest
 ```
 
 ## Quick Start
