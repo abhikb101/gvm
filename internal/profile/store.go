@@ -128,4 +128,3 @@ func profilePath(name string) (string, error) {
 	}
 	return filepath.Join(dir, name+".json"), nil
 }
-

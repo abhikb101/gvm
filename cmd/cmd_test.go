@@ -720,7 +720,7 @@ func TestPromptConfirmYes(t *testing.T) {
 	}{
 		{"y\n", true},
 		{"yes\n", true},
-		{"\n", true},  // default is yes
+		{"\n", true}, // default is yes
 		{"n\n", false},
 		{"no\n", false},
 	}

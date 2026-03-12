@@ -7,8 +7,8 @@ import (
 
 // Table renders aligned columns of data.
 type Table struct {
-	rows    [][]string
-	widths  []int
+	rows   [][]string
+	widths []int
 }
 
 // NewTable creates a new Table.

@@ -20,7 +20,7 @@ type Profile struct {
 	AuthMethod       AuthMethod `json:"auth_method"`
 	SSHKeyPath       string     `json:"ssh_key_path,omitempty"`
 	GHTokenEncrypted string     `json:"gh_token_encrypted,omitempty"`
-	SigningKey        string     `json:"signing_key,omitempty"`
+	SigningKey       string     `json:"signing_key,omitempty"`
 	CreatedAt        time.Time  `json:"created_at"`
 	LastUsed         time.Time  `json:"last_used"`
 }

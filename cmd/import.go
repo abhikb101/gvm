@@ -74,7 +74,7 @@ func runImport(cmd *cobra.Command, args []string) error {
 			GitEmail:       ep.GitEmail,
 			GitHubUsername: ep.GitHubUsername,
 			AuthMethod:     profile.AuthMethod(ep.AuthMethod),
-			SigningKey:      ep.SigningKey,
+			SigningKey:     ep.SigningKey,
 			CreatedAt:      timeNow(),
 			LastUsed:       timeNow(),
 		}

@@ -94,9 +94,9 @@ func scanSSHConfig() []DetectedIdentity {
 
 		id := DetectedIdentity{
 			Source:       "ssh-config",
-			Name:        sanitizeName(currentHost),
+			Name:         sanitizeName(currentHost),
 			SSHHostAlias: currentHost,
-			Description: fmt.Sprintf("SSH config: Host %s → %s", currentHost, currentHostname),
+			Description:  fmt.Sprintf("SSH config: Host %s → %s", currentHost, currentHostname),
 		}
 		if currentIdentityFile != "" {
 			id.SSHKeyPath = expandPath(currentIdentityFile)
@@ -260,7 +260,7 @@ func scanGHCLI() []DetectedIdentity {
 
 	return []DetectedIdentity{{
 		Source:         "gh-cli",
-		Name:          sanitizeName(username),
+		Name:           sanitizeName(username),
 		GitHubUsername: username,
 		GHToken:        token,
 		Description:    fmt.Sprintf("GitHub CLI: authenticated as %s", username),

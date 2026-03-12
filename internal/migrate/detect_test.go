@@ -7,7 +7,6 @@ import (
 	"testing"
 )
 
-
 func TestSanitizeName(t *testing.T) {
 	tests := []struct {
 		input string
@@ -248,8 +247,8 @@ func TestScanGitConfig(t *testing.T) {
 
 func TestToJSON(t *testing.T) {
 	id := DetectedIdentity{
-		Source:  "test",
-		Name:   "test-profile",
+		Source:   "test",
+		Name:     "test-profile",
 		GitEmail: "test@test.com",
 	}
 	j := id.ToJSON()

@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	configDirName  = ".gvm"
-	configFileName = "config.json"
-	activeFileName = "active"
+	configDirName   = ".gvm"
+	configFileName  = "config.json"
+	activeFileName  = "active"
 	profilesDirName = "profiles"
-	configVersion  = "1"
+	configVersion   = "1"
 )
 
 // DefaultGitHubClientID is the OAuth App client ID embedded at build time.
@@ -206,4 +206,3 @@ func (c *Config) Set(key, value string) error {
 	}
 	return nil
 }
-
