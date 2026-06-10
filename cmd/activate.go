@@ -81,9 +81,10 @@ func activateProfile(name string, quiet bool) error {
 		}
 	}
 
-	// If not in a bound repo, set global git config
+	// If not in a bound repo, set global git config (including the SSH key,
+	// so remote operations authenticate as this profile)
 	if !inBoundRepo {
-		if err := gitpkg.ConfigureIdentity("global", p.GitName, p.GitEmail, ""); err != nil && !quiet {
+		if err := gitpkg.ConfigureIdentity("global", p.GitName, p.GitEmail, p.SSHKeyPath); err != nil && !quiet {
 			ui.Warn("Could not set global git config: %v", err)
 		}
 	}

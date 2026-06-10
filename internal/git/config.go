@@ -33,7 +33,9 @@ func UnsetLocalConfig(key string) error {
 	return nil
 }
 
-// ConfigureIdentity sets user.name, user.email, and optionally core.sshCommand.
+// ConfigureIdentity sets user.name, user.email, and core.sshCommand.
+// When sshKeyPath is empty, any GVM-managed core.sshCommand at this scope is
+// removed so a previous profile's key doesn't keep being used.
 func ConfigureIdentity(scope string, name, email, sshKeyPath string) error {
 	flag := "--" + scope
 
@@ -44,14 +46,29 @@ func ConfigureIdentity(scope string, name, email, sshKeyPath string) error {
 		return fmt.Errorf("setting user.email: %w", err)
 	}
 
-	if sshKeyPath != "" && scope == "local" {
+	if sshKeyPath != "" {
 		sshCmd := fmt.Sprintf("ssh -i %s -o IdentitiesOnly=yes -o IdentityAgent=none", sshKeyPath)
 		if err := gitConfig(flag, "core.sshCommand", sshCmd); err != nil {
 			return fmt.Errorf("setting core.sshCommand: %w", err)
 		}
+	} else {
+		unsetGVMSSHCommand(flag)
 	}
 
 	return nil
+}
+
+// unsetGVMSSHCommand removes core.sshCommand at the given scope, but only if
+// it was set by GVM, so user-managed SSH configuration is left alone.
+func unsetGVMSSHCommand(flag string) {
+	current, err := gitConfigGet(flag, "core.sshCommand")
+	if err != nil || current == "" {
+		return
+	}
+	if strings.HasPrefix(current, "ssh -i ") && strings.Contains(current, "IdentitiesOnly=yes") {
+		cmd := exec.Command("git", "config", flag, "--unset", "core.sshCommand")
+		_ = cmd.Run()
+	}
 }
 
 // ConfigureCredentialHelper sets up GVM as the credential helper for GitHub.
