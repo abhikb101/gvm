@@ -57,6 +57,61 @@ func TestConfigureIdentityGlobal(t *testing.T) {
 	}
 }
 
+func TestConfigureIdentityGlobalSSHKey(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	repoDir := initTestRepo(t)
+	oldDir, _ := os.Getwd()
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
+
+	// Switching to a profile with an SSH key pins it globally
+	err := ConfigureIdentity("global", "Work User", "work@example.com", "/tmp/work-key")
+	if err != nil {
+		t.Fatalf("ConfigureIdentity(global) error = %v", err)
+	}
+
+	out, _ := exec.Command("git", "config", "--global", "core.sshCommand").Output()
+	if cmd := trimOutput(out); cmd == "" {
+		t.Error("global core.sshCommand not set")
+	}
+
+	// Switching to a profile without an SSH key clears the GVM-managed value
+	err = ConfigureIdentity("global", "Other User", "other@example.com", "")
+	if err != nil {
+		t.Fatalf("ConfigureIdentity(global, no key) error = %v", err)
+	}
+
+	out, _ = exec.Command("git", "config", "--global", "core.sshCommand").Output()
+	if cmd := trimOutput(out); cmd != "" {
+		t.Errorf("global core.sshCommand = %q, want unset after switching to no-key profile", cmd)
+	}
+}
+
+func TestConfigureIdentityPreservesUserSSHCommand(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	repoDir := initTestRepo(t)
+	oldDir, _ := os.Getwd()
+	defer func() { _ = os.Chdir(oldDir) }()
+	_ = os.Chdir(repoDir)
+
+	// A user-managed core.sshCommand (not GVM's format) must not be removed
+	userCmd := "ssh -F /home/me/custom-ssh-config"
+	if err := SetGlobalConfig("core.sshCommand", userCmd); err != nil {
+		t.Fatalf("SetGlobalConfig() error = %v", err)
+	}
+
+	if err := ConfigureIdentity("global", "User", "u@example.com", ""); err != nil {
+		t.Fatalf("ConfigureIdentity() error = %v", err)
+	}
+
+	out, _ := exec.Command("git", "config", "--global", "core.sshCommand").Output()
+	if cmd := trimOutput(out); cmd != userCmd {
+		t.Errorf("global core.sshCommand = %q, want %q (user config preserved)", cmd, userCmd)
+	}
+}
+
 func TestSetLocalConfig(t *testing.T) {
 	repoDir := initTestRepo(t)
 	oldDir, _ := os.Getwd()

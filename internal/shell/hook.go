@@ -164,6 +164,12 @@ func bashHook() string {
 }
 
 gvm_auto_switch() {
+  # PROMPT_COMMAND runs before every prompt — only act when the directory
+  # actually changed, so a manual 'gvm switch' isn't immediately reverted
+  if [ "$PWD" = "$_GVM_LAST_PWD" ]; then
+    return
+  fi
+  _GVM_LAST_PWD="$PWD"
   local gvmrc_path
   gvmrc_path=$(_gvm_find_gvmrc)
   if [ $? -eq 0 ]; then
